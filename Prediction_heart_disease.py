@@ -223,18 +223,29 @@ Ces modèles ont été évalués sur leur précision (accuracy), leur rappel (re
 def user_input_features():
     st.title('Prédiction du Risque de Maladies Cardiaques 💖')
 
+    # Dictionary to map education levels to numerical values
+    education_map = {
+        "Élémentaire": 1,
+        "Secondaire": 2,
+        "Collège": 3,
+        "Lycée": 4,
+        "Université": 5,
+        "Post-universitaire": 6,
+        "Doctorat": 7
+    }
+
     features = {
         'male': st.selectbox('Sexe biologique (Masculin, Féminin)', ['Féminin', 'Masculin']),
         'age': st.number_input('Âge du patient en années 🧑‍🦳', 20, 100, 50),
         'education': st.selectbox(
             "Niveau d'éducation atteint",
-            ["Élémentaire", "Secondaire", "Collège", "Lycée", "Université", "Post-universitaire", "Doctorat"]
+            list(education_map.keys())
         ),
         'currentSmoker': st.selectbox('Le patient est-il fumeur ? (Non, Oui) 🚬', ['Non', 'Oui']),
     }
 
     # Ajouter la logique conditionnelle pour le nombre de cigarettes fumées
-    if 'currentSmoker' in features:  # Vérifier que la clé 'currentSmoker' est présente
+    if 'currentSmoker' in features:
         if features['currentSmoker'] == 'Oui':
             features['cigsPerDay'] = st.number_input('Nombre de cigarettes fumées par jour 🚬', 0, 100, 0)
         else:
@@ -256,6 +267,7 @@ def user_input_features():
     features['male'] = 1 if features['male'] == 'Masculin' else 0
     features['currentSmoker'] = 1 if features['currentSmoker'] == 'Oui' else 0
     features['prevalentHyp'] = 1 if features['prevalentHyp'] == 'Oui' else 0
+    features['education'] = education_map[features['education']]  # Convert education to numerical value
 
     return pd.DataFrame([features])
 
